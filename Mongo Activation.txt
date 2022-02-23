@@ -1,0 +1,2 @@
+to open shell: & 'C:\Program Files\MongoDB\Server\5.0\bin\mongo.exe'
+to start database: & 'C:\Program Files\MongoDB\Server\5.0\bin\mongod.exe'

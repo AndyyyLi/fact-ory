@@ -1,0 +1,33 @@
+body {
+    position: relative;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+    background-color: #23036e;
+    height: 100%;
+}
+.bodyTxt {
+    color: #62daff;
+}
+
+#prename {
+    margin-top: 50px;
+}
+
+#name {
+    font-size: 70px;
+}
+
+#topBar {
+    background-color: #f9ff4d;
+    border: 1px solid #23036e;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f9ff4d;
+}
+
