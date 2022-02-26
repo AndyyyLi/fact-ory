@@ -1,9 +1,10 @@
 const http = require('http');
 const fs = require('fs');
+// const express = require('express');
 const port = 3000;
 
 const server = http.createServer(function(req, res) {
-    console.log(req.url);
+    // console.log(req.url);
 
     if (req.url == "/") {
         fs.readFile('index.html', function(error, data) {
@@ -18,7 +19,6 @@ const server = http.createServer(function(req, res) {
             res.end();
         });
     } else if (req.url == "/css/style.css") {
-        // ASK AIDAN WHY THESE ARE NEEDED DESPITE BEING INCLUDED IN HTML
         fs.readFile('css/style.css', function(error, data) {
             res.writeHead(200, { 'Content-Type': 'text/css' });
             if (error) {
