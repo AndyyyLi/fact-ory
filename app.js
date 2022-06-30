@@ -1,54 +1,85 @@
-const http = require('http');
-const fs = require('fs');
-// const express = require('express');
+const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const Fact = require('./js/models/fact');
+
+// set connection port
 const port = 3000;
 
-const server = http.createServer(function(req, res) {
-    // console.log(req.url);
+// express app
+const app = express();
 
-    if (req.url == "/") {
-        fs.readFile('index.html', function(error, data) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            if (error) {
-                res.writeHead(404);
-                res.write('Error: File Not Found');
-            } else {
-                // console.log('about to load html');
-                res.write(data);
-            }
-            res.end();
-        });
-    } else if (req.url == "/css/style.css") {
-        fs.readFile('css/style.css', function(error, data) {
-            res.writeHead(200, { 'Content-Type': 'text/css' });
-            if (error) {
-                res.writeHead(404);
-                res.write('Error: File Not Found');
-            } else {
-                // console.log('about to load css');
-                res.write(data);
-            }
-            res.end();
-        });
-    } else if (req.url == "/js/main.js") {
-        fs.readFile('js/main.js', function(error, data) {
-            res.writeHead(200, { 'Content-Type': 'text/js' });
-            if (error) {
-                res.writeHead(404);
-                res.write('Error: File Not Found');
-            } else {
-                // console.log('about to load js');
-                res.write(data);
-            }
-            res.end();
-        });
-    }
+// activate mongodb
+mongoose.connect('mongodb://localhost:27017/fact-ory')
+.then(() => {
+    console.log('connection successful');
+
+    // below tests adding a fact to db
+    // const fact = new Fact({ key: 420, fact: "Rats never stop growing", views: 0, likes: 0 });
+    // fact.save()
+    // .then((fact) => {
+    //     // res.status(201).send(fact);
+    //     console.log("Fact " + fact.key + " stored!");
+    // })
+    // .catch((err) => {
+    //     // res.status(400).send(err);
+    // })
+}).catch((err) => {
+    console.log(err);
 });
 
-server.listen(port, 'localhost', function(error) {
-    if (error) {
-        console.log('Uh Oh!', error);
-    } else {
-        console.log('Server is listening on port ' + port)
-    }
+// listens for requests
+app.listen(port);
+
+// middleware
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// app.get('/', (req, res) => {
+//     const fact = new Fact({ key: 1, fact: "12 is the largest one-syllable number", views: 0, likes: 0 });
+//     fact.save()
+//     .then((fact) => {
+//         res.status(201).send(fact);
+//         console.log(fact);
+//     })
+//     .catch((err) => {
+//         res.status(400).send(err);
+//     })
+// });
+
+// looks for fact in db
+app.post('/search', function (req, res) {
+    Fact.findOne({ key: req.body.key }, function (err, fact) {
+        if (err) res.status(400).send(err);
+
+        if (fact) {
+            // display fact
+            console.log("Found! Fact " + fact.key + ": " + fact.fact);
+            res.sendFile('./existingFact.html', {root: __dirname});
+        } else {
+            // show new fact
+            console.log("New fact #" + req.body.key);
+            res.sendFile('./newFact.html', {root: __dirname});
+        }
+    });
+});
+
+// gets webpage, css, and js files
+app.get('/', (req, res) => {
+    res.sendFile('./index.html', {root: __dirname});
+});
+
+app.get('/css/style.css', (req, res) => {
+    res.sendFile('./css/style.css', {root: __dirname});
+});
+
+app.get('/js/main.js', (req, res) => {
+    res.sendFile('./js/main.js', {root: __dirname});
+});
+
+// redirects all extensions to main webpage
+app.use((req, res) => {
+    res.sendFile('./index.html', {root: __dirname});
 });

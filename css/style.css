@@ -7,6 +7,13 @@ body {
     background-color: #23036e;
     height: 100%;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .bodyTxt {
     color: #62daff;
 }
@@ -16,12 +23,12 @@ body {
 }
 
 #name {
-    font-size: 70px;
+    font-size: 80px;
 }
 
 #topBar {
     background-color: #f9ff4d;
-    border: 1px solid #23036e;
+    padding: 10px;
 }
 
 #footer {
@@ -31,3 +38,52 @@ body {
     background-color: #f9ff4d;
 }
 
+
+/* styles for "how it works" popup modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 50px;
+    margin: auto;
+    margin-top: -50px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0b002486;
+}
+
+.content {
+    margin: auto;
+    border: 3px solid #f9ff4d;
+    width: 50%;
+    height: 50%;
+    padding-top: 50px;
+    background-color: #1f0362;
+}
+
+.content p {
+    color: white;
+}
+
+.close {
+    text-align: center;
+    color: #347dea;
+    border: #f9ff4d;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #2048ce;
+}
+
+/* styles for fact boxes*/
+/* #existingFact {
+    display: none;
+}
+
+#newFact {
+    display: none;
+} */

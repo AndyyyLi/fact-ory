@@ -1,30 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Fact-ory</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-<body>
-
+  <body>
     <div id="topBar">
-        <h3 id="topTxt">How it works</h3>
+      <button id="howItWorks">How it works</button>
     </div>
-    
-    <h2 class="bodyTxt" id="prename">Welcome to</h2>
-    <h1 class="bodyTxt" id="name">The Fact-ory</h1>
 
-    <div id="entry">
-        <h2 class="bodyTxt">Enter a number:</h2>
-        <input type="number" onkeypress="return event.charCode >= 48" min="0" id="numEntry">
+    <div id="homeScreen">
+      <!--How it Works popup modal window-->
+      <div id="modalBox" class="modal">
+        <div class="content">
+          <!--NEED TO EDIT AFTER IMPLEMENTING FUNCTIONALITY-->
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+          <span class="close">Got it!</span>
+        </div>
+      </div>
+
+      <!--Webpage title-->
+      <h2 class="bodyTxt" id="prename">Welcome to</h2>
+      <h1 class="bodyTxt" id="name">The Fact-ory</h1>
+
+      <!--Number input screen-->
+      <div id="entry">
+        <form action="search" method="POST">
+          <h2 class="bodyTxt">Enter a number:</h2>
+          <input
+            type="number"
+            oninput="this.value = this.value.slice(0,5)"
+            min="0"
+            id="numInput"
+            name="key"
+          />
+          <br /><br />
+          <input type="submit" value="Search!" id="searchBtn">
+        </form>
+      </div>
     </div>
 
     <footer id="footer">Made by Andy Li</footer>
-</body>
+  </body>
 
-<script src="js/main.js"></script>
-
+  <script src="js/main.js"></script>
 </html>
