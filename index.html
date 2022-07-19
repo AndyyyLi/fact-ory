@@ -10,7 +10,7 @@
 
   <body>
     <div id="topBar">
-      <button id="howItWorks">How it works</button>
+      <button id="howItWorksBtn">How it works</button>
     </div>
 
     <div id="homeScreen">
@@ -29,23 +29,47 @@
       </div>
 
       <!--Webpage title-->
-      <h2 class="bodyTxt" id="prename">Welcome to</h2>
-      <h1 class="bodyTxt" id="name">The Fact-ory</h1>
+      <h2 class="bodyTxt" id="pretitle">Welcome to</h2>
+      <h1 class="bodyTxt" id="title">The Fact-ory</h1>
 
       <!--Number input screen-->
-      <div id="entry">
-        <form action="search" method="POST">
-          <h2 class="bodyTxt">Enter a number:</h2>
-          <input
-            type="number"
-            oninput="this.value = this.value.slice(0,5)"
-            min="0"
-            id="numInput"
-            name="key"
-          />
-          <br /><br />
-          <input type="submit" value="Search!" id="searchBtn">
-        </form>
+      <div id="inputBox">
+        <h2 class="bodyTxt">Enter a number:</h2>
+        <input
+          type="number"
+          oninput="this.value = this.value.slice(0,5)"
+          min="0"
+          id="keyInput"
+        >
+        <br /><br />
+        <button id="searchBtn" onclick="search()">Search!</button>
+      </div>
+
+      <!--Existing fact div-->
+      <div class="factBox" id="existingFact">
+
+        <!--title and body inserted by showExistingFact()-->
+
+        <div id="factDetails">
+          <!--views and likes inserted by showExistingFact()-->
+        </div>
+        
+        <div class="factOptions">
+          <button class="leftOption" onclick="factSpace.update(true)">I like this fact too!</button>
+          <button class="rightOption" onclick="factSpace.update(false)">Find another fact</button>
+        </div>
+      </div>
+
+      <!--New fact div-->
+      <div class="factBox" id="newFact">
+
+        <!--title and body inserted by showNewFact()-->
+
+        <div class="factOptions">
+          <button class="leftOption" onclick="factSpace.addFact()">Add Fact!</button>
+          <button class="rightOption" onclick="newSearchScreen(false)">No Thanks</button>
+        </div>
+
       </div>
     </div>
 

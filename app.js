@@ -35,7 +35,8 @@ app.listen(port);
 // middleware
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json());
 
 // app.get('/', (req, res) => {
 //     const fact = new Fact({ key: 1, fact: "12 is the largest one-syllable number", views: 0, likes: 0 });
@@ -50,21 +51,62 @@ app.use(bodyParser.json());
 // });
 
 // looks for fact in db
-app.post('/search', function (req, res) {
-    Fact.findOne({ key: req.body.key }, function (err, fact) {
+app.get('/api/v1/facts', function (req, res) {
+    let val = req.query.key;
+
+    Fact.findOne({ key: val }, function (err, fact) {
         if (err) res.status(400).send(err);
 
         if (fact) {
-            // display fact
-            console.log("Found! Fact " + fact.key + ": " + fact.fact);
-            res.sendFile('./existingFact.html', {root: __dirname});
+            // display existing fact
+            res.status(201).send(fact);
         } else {
             // show new fact
-            console.log("New fact #" + req.body.key);
-            res.sendFile('./newFact.html', {root: __dirname});
+            res.status(204).send(fact);
         }
     });
 });
+
+// updates an existing fact in db
+app.post('/update', function (req, res) {
+    let liked = req.query.liked;
+    let id = req.query.id;
+
+    Fact.findById(id, function(err, fact) {
+        if (err) res.status(400).send(err);
+
+        if (fact) {
+            if (liked == 'true') fact.likes++;
+            fact.views++;
+            fact.save();
+            
+            res.status(200).send();
+        } else {
+            res.status(404).send();
+        }
+    })
+})
+
+// creates a new fact in db
+app.post('/create', function (req, res) {
+    let key = req.query.key;
+    let factBody = req.body.fact;
+
+    let newFact = new Fact({
+        key: key, 
+        fact: factBody, 
+        views: 0, 
+        likes: 0
+    });
+
+    newFact.save()
+    .then((fact) => {
+        res.status(201).send(fact);
+    })
+    .catch((err) => {
+        res.status(400).send(err);
+    })
+})
 
 // gets webpage, css, and js files
 app.get('/', (req, res) => {

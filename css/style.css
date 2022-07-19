@@ -18,11 +18,11 @@ input::-webkit-inner-spin-button {
     color: #62daff;
 }
 
-#prename {
+#pretitle {
     margin-top: 50px;
 }
 
-#name {
+#title {
     font-size: 80px;
 }
 
@@ -46,7 +46,7 @@ input::-webkit-inner-spin-button {
     z-index: 1;
     padding-top: 50px;
     margin: auto;
-    margin-top: -50px;
+    margin-top: -25px;
     left: 0;
     right: 0;
     width: 100%;
@@ -57,7 +57,7 @@ input::-webkit-inner-spin-button {
 .content {
     margin: auto;
     border: 3px solid #f9ff4d;
-    width: 50%;
+    width: 35%;
     height: 50%;
     padding-top: 50px;
     background-color: #1f0362;
@@ -65,12 +65,13 @@ input::-webkit-inner-spin-button {
 
 .content p {
     color: white;
+    padding: 0 25px 50px 25px;
 }
 
 .close {
     text-align: center;
-    color: #347dea;
-    border: #f9ff4d;
+    font-size: 20px;
+    color: #f9ff4d;
     cursor: pointer;
 }
 
@@ -79,11 +80,82 @@ input::-webkit-inner-spin-button {
     color: #2048ce;
 }
 
-/* styles for fact boxes*/
-/* #existingFact {
+/* general styles for fact boxes */
+.factBox {
+    color: #f9ff4d;
+    display: block;
+    border: solid #f9ff4d 4px;
+    margin: auto;
+    margin-top: 50px;
+    width: 50%;
+    background-color: #3f46ff;
+}
+
+.factBox h1 {
+    font-size: 50px;
+}
+
+.factOptions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: -1px;
+}
+
+.factOptions button {
+    border-top: solid #f9ff4d 4px;
+    border-bottom: none;
+    padding: 10px;
+    background-color: #5c95fe;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    font-weight: bold;
+    color: #3f2dff;
+    font-size: 18px;
+}
+
+.leftOption {
+    border-right: solid #f9ff4d 2px;
+    border-left: none;
+}
+
+.rightOption {
+    border-left: solid #f9ff4d 2px;
+    border-right: none;
+}
+
+/* styles for existing fact box*/
+#existingFact {
     display: none;
 }
 
+#existingFact p {
+    color: white;
+    padding: 0px 70px 0px 70px;
+    font-size: 18px;
+}
+
+#factDetails {
+    font-size: 30px;
+}
+
+#views {
+    margin-bottom: 25px;
+}
+
+#likes {
+    margin-top: 25px;
+}
+
+
+/* styles for new fact box*/
 #newFact {
     display: none;
-} */
+}
+
+#newFact textarea {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    resize: none;
+    width: 75%;
+    height: 80px;
+}
