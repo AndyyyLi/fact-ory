@@ -14,17 +14,6 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/fact-ory')
 .then(() => {
     console.log('connection successful');
-
-    // below tests adding a fact to db
-    // const fact = new Fact({ key: 420, fact: "Rats never stop growing", views: 0, likes: 0 });
-    // fact.save()
-    // .then((fact) => {
-    //     // res.status(201).send(fact);
-    //     console.log("Fact " + fact.key + " stored!");
-    // })
-    // .catch((err) => {
-    //     // res.status(400).send(err);
-    // })
 }).catch((err) => {
     console.log(err);
 });
@@ -37,18 +26,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 app.use(express.json());
-
-// app.get('/', (req, res) => {
-//     const fact = new Fact({ key: 1, fact: "12 is the largest one-syllable number", views: 0, likes: 0 });
-//     fact.save()
-//     .then((fact) => {
-//         res.status(201).send(fact);
-//         console.log(fact);
-//     })
-//     .catch((err) => {
-//         res.status(400).send(err);
-//     })
-// });
 
 // looks for fact in db
 app.get('/api/v1/facts', function (req, res) {
