@@ -22,9 +22,9 @@ mongoose.connect('mongodb://localhost:27017/fact-ory')
 app.listen(port);
 
 // middleware
+app.use(require('express-status-monitor')());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 app.use(express.json());
 
 // looks for fact in db
@@ -83,7 +83,7 @@ app.post('/create', function (req, res) {
     .catch((err) => {
         res.status(400).send(err);
     })
-})
+});
 
 // gets webpage, css, and js files
 app.get('/', (req, res) => {

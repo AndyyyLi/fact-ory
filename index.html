@@ -10,7 +10,7 @@
 
   <body>
     <div id="topBar">
-      <button id="howItWorksBtn">How it works</button>
+      <button id="howItWorksBtn" onclick="showModal()">How it works</button>
     </div>
 
     <div id="homeScreen">
@@ -24,7 +24,7 @@
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
           </p>
-          <span class="close">Got it!</span>
+          <button class="close" onclick="closeModal()">Got it!</button>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
           id="keyInput"
         >
         <br /><br />
-        <button id="searchBtn" onclick="search()">Search!</button>
+        <button id="searchBtn" onclick="search(false, null)">Search!</button>
       </div>
 
       <!--Existing fact div-->
@@ -55,8 +55,8 @@
         </div>
         
         <div class="factOptions">
-          <button class="leftOption" onclick="factSpace.update(true)">I like this fact too!</button>
-          <button class="rightOption" onclick="factSpace.update(false)">Find another fact</button>
+          <button class="leftOption" onclick="factSpace.update(true, false)">I like this fact too!</button>
+          <button class="rightOption" onclick="factSpace.update(false, false)">Find another fact</button>
         </div>
       </div>
 
@@ -66,7 +66,7 @@
         <!--title and body inserted by showNewFact()-->
 
         <div class="factOptions">
-          <button class="leftOption" onclick="factSpace.addFact()">Add Fact!</button>
+          <button class="leftOption" onclick="factSpace.addFact(false)">Add Fact!</button>
           <button class="rightOption" onclick="newSearchScreen(false)">No Thanks</button>
         </div>
 

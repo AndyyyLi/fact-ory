@@ -1,15 +1,12 @@
 var modal = document.getElementById("modalBox");
-var howItWorksBtn = document.getElementById("howItWorksBtn");
-var close = document.getElementsByClassName("close")[0];
-var keyInput = document.getElementById("keyInput");
 
 // makes modal window appear on click
-howItWorksBtn.onclick = function() {
+function showModal() {
     modal.style.display = "block";
 }
 
 // closes modal window upon pressing "Got it!"
-close.onclick = function() {
+function closeModal() {
     modal.style.display = "none";
 }
 
@@ -21,11 +18,16 @@ window.onclick = function(event) {
 }
 
 // allows user to search for fact by pressing enter instead of clicking button
-keyInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        document.getElementById("searchBtn").click();
-    }
-})
+// DOM needs to load before keyInput can have an addEventListener
+document.addEventListener('DOMContentLoaded', function() {
+    var keyInput = document.getElementById("keyInput");
+
+    keyInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            document.getElementById("searchBtn").click();
+        }
+    });
+});
 
 // helper to remove input box from search screen
 function removeInputBox() {
@@ -77,26 +79,31 @@ function newSearchScreen(justUpdated) {
 }
 
 // fetches for requested fact from server based on user input
-function search() {
-    var searchVal = parseInt(document.getElementById("keyInput").value);
+// TEST: returns existing fact or null otherwise
+async function search(testing, testVal) {
+    try {
+        var searchVal = testing ? testVal : parseInt(document.getElementById("keyInput").value);
 
-    // defaults blank field as 0
-    if (searchVal == "") searchVal = 0;
+        // defaults blank field as 0
+        if (searchVal == "") searchVal = 0;
 
-    fetch('/api/v1/facts?key=' + searchVal)
-    .then((response) => {
-        if (response.status == 201) return response.json();
-    })
-    .then((fact) => {
-        if (fact) {
-            factSpace.showExistingFact(fact);
-        } else {
-            factSpace.showNewFact(searchVal);
+        const response = await fetch('/api/v1/facts?key=' + searchVal);
+        const fact = response.status == 201 ? await response.json() : null;
+
+        if (testing) {
+            if (fact) return fact;
+            return searchVal;
         }
-    })
-    .catch((err) => {
+
+        if (fact) {
+            factSpace.showExistingFact(fact, false);
+        } else {
+            factSpace.showNewFact(searchVal, false);
+        }
+    } catch (err) {
         console.log(err);
-    });
+        return null;
+    }
 }
 
 // module pattern used to keep track of current fact ID or new fact key to update db after user finishes with fact
@@ -104,11 +111,27 @@ var factSpace = function() {
     var currentId = null;
     var currentKey = null;
 
+    // getter functions
+    function getId() {
+        return currentId;
+    }
+
+    function getKey() {
+        return currentKey;
+    }
+
+    function resetVars() {
+        currentId = null;
+        currentKey = null;
+    }
+
     // displays an existing fact and allows user to like the fact which would update the fact in the db
     // NOTE: views MUST be incremented every time an existing fact is shown
-    function showExistingFact(fact) {
+    function showExistingFact(fact, testing) {
         currentId = fact._id;
         currentKey = fact.key;
+
+        if (testing) return;
 
         var existingFact = document.getElementById("existingFact");
         var factDetails = document.getElementById("factDetails");
@@ -140,8 +163,10 @@ var factSpace = function() {
     }
 
     // displays an input box that allows user to input their own fact which would create the fact in the db
-    function showNewFact(key) {
+    function showNewFact(key, testing) {
         currentKey = key;
+
+        if (testing) return;
 
         var newFact = document.getElementById("newFact");
         var factOptions = document.getElementsByClassName("factOptions")[1];
@@ -169,15 +194,16 @@ var factSpace = function() {
     }
 
     // updates current fact in server based on id and userLiked
-    function updateFact(userLiked) {
+    async function updateFact(userLiked, testing) {
         if (currentId == null) {
-            console.log("Error, no fact id present");
-            return;
+            console.log("Cannot update, no fact id present");
+            return null;
         }
 
-        fetch('/update?liked=' + userLiked + '&id=' + currentId, { method: 'POST' })
-        .then((res) => {
-            if (res.status == 404) {
+        try {
+            const response = await fetch('/update?liked=' + userLiked + '&id=' + currentId, { method: 'POST' });
+
+            if (response.status == 404) {
                 console.log("Something went wrong with accessing DB");
                 return;
             }
@@ -188,44 +214,73 @@ var factSpace = function() {
     
             currentId = null;
             currentKey = null;
+            
+            if (testing) return;
 
             newSearchScreen(true);
-        })
-        .catch((err) => {
+
+        } catch (err) {
             console.log(err);
-        })
+
+            currentId = null;
+            currentKey = null;
+
+            return null;
+        }
     }
 
     // creates and inserts a new fact into db based on key
-    function addFact() {
-        var factInput = document.getElementById("factInput").value;
-        var factData = { fact: factInput }
+    async function addFact(testing) {
+        if (testing) {
+            var factData = { fact: "test fact body" };
+        } else {
+            var factInput = document.getElementById("factInput").value;
+            var factData = { fact: factInput };
+        }
+        
+        try {
+            var response = await fetch('/create?key=' + currentKey, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(factData)
+            });
 
-        fetch('/create?key=' + currentKey, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(factData)
-        })
-        .then((res) => {
-            if (res.status == 400) {
+            if (response.status == 400) {
                 console.log("Something went wrong with accessing DB");
+                return null;
             } else {
                 alert("Successfully added fact " + currentKey + ", thank you for your contribution!");
 
                 currentKey = null;
+
+                if (testing) return;
             }
 
             newSearchScreen(false);
-        })
+            
+        } catch (err) {
+            console.log(err);
+
+            currentKey = null;
+
+            return null;
+        }
     }
 
     return {
-        showExistingFact:showExistingFact,
-        showNewFact:showNewFact,
-        update:updateFact,
-        addFact:addFact
+        getId: getId,
+        getKey: getKey,
+        resetVars: resetVars,
+        showExistingFact: showExistingFact,
+        showNewFact: showNewFact,
+        update: updateFact,
+        addFact: addFact
     }
 }();
 
+module.exports = {
+    search,
+    factSpace
+};
