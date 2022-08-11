@@ -40,9 +40,11 @@ function removeInputBox() {
 function shrinkTitle() {
     let pretitle = document.getElementById("pretitle");
     let title = document.getElementById("title");
+    let modalBox = document.getElementById("modalBox");
 
     pretitle.style.display = "none";
     title.style.fontSize = "40px";
+    modalBox.style.marginTop = "-25px";
 }
 
 // removes body elements of existingFact div
@@ -82,10 +84,20 @@ function newSearchScreen(justUpdated) {
 // TEST: returns existing fact or null otherwise
 async function search(testing, testVal) {
     try {
-        var searchVal = testing ? testVal : parseInt(document.getElementById("keyInput").value);
+        var searchVal;
 
-        // defaults blank field as 0
-        if (searchVal == "") searchVal = 0;
+        if (testing) {
+            searchVal = testVal;
+        } else {
+            searchVal = document.getElementById("keyInput").value;
+
+            if (searchVal == "") {
+                alert("Please enter a number first!");
+                return;
+            }
+
+            searchVal = parseInt(searchVal);
+        }
 
         const response = await fetch('/api/v1/facts?key=' + searchVal);
         const fact = response.status == 201 ? await response.json() : null;
@@ -205,7 +217,7 @@ var factSpace = function() {
 
             if (response.status == 404) {
                 console.log("Something went wrong with accessing DB");
-                return;
+                return null;
             }
 
             if (userLiked) {
@@ -235,6 +247,13 @@ var factSpace = function() {
             var factData = { fact: "test fact body" };
         } else {
             var factInput = document.getElementById("factInput").value;
+
+            // check if input is blank
+            if (factInput.match(/^\s*$/)) {
+                alert("You must enter a fact to add it!");
+                return;
+            }
+
             var factData = { fact: factInput };
         }
         

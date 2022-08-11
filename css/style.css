@@ -15,11 +15,12 @@ input::-webkit-inner-spin-button {
 }
 
 .bodyTxt {
-    color: #62daff;
+    color: #61d7ff;
 }
 
 #pretitle {
     margin-top: 50px;
+    font-size: 40px;
 }
 
 #title {
@@ -27,7 +28,7 @@ input::-webkit-inner-spin-button {
 }
 
 #topBar {
-    background-color: #f9ff4d;
+    background-color: #adf1ff;
     padding: 10px;
 }
 
@@ -35,9 +36,61 @@ input::-webkit-inner-spin-button {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #f9ff4d;
+    background-color: #adf1ff;
 }
 
+#inputBox h2 {
+    font-size: 30px;
+}
+
+#searchBtn {
+    background-color: #61d7ff;
+    border: 3px outset #ffffff;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 5px 30px 5px 30px;
+}
+
+#searchBtn:hover {
+    cursor: pointer;
+    background-color: #55c3ff;
+}
+
+#searchBtn:active {
+    border-style: inset;
+}
+
+#howItWorksBtn {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 17px;
+    border: 3px solid #adf1ff;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 3px 10px 3px 10px;
+}
+
+#howItWorksBtn:hover {
+    border: 3px outset #ffffff;
+    cursor: pointer;
+}
+
+#howItWorksBtn:active {
+    background-color: #90ebfd;
+    border: 3px inset #ffffff;
+}
+
+#keyInput {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+    width: 250px;
+    border-radius: 5px;
+    border-style: none;
+}
 
 /* styles for "how it works" popup modal */
 .modal {
@@ -56,39 +109,49 @@ input::-webkit-inner-spin-button {
 
 .content {
     margin: auto;
-    border: 3px solid #f9ff4d;
+    border: 3px solid #adf1ff;
     width: 35%;
-    height: 50%;
+    height: 45%;
     padding-top: 50px;
     background-color: #1f0362;
+    border-radius: 15px;
 }
 
 .content p {
     color: white;
     padding: 0 25px 50px 25px;
+    font-size: 20px;
 }
 
 .close {
-    text-align: center;
-    font-size: 20px;
-    color: #f9ff4d;
+    font-size: 18px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
     cursor: pointer;
+    padding: 5px 20px 5px 20px;
+    border: 3px outset #ffffff;
+    border-radius: 10px;
+    background-color: #61d7ff;
 }
 
-.close:hover,
-.close:focus {
-    color: #2048ce;
+.close:hover {
+    background-color: #55c3ff;
+}
+
+.close:active {
+    border: 3px inset #ffffff;
 }
 
 /* general styles for fact boxes */
 .factBox {
-    color: #f9ff4d;
+    color: #adf1ff;
     display: block;
-    border: solid #f9ff4d 4px;
+    border: solid #ffffff 4px;
+    border-radius: 15px;
     margin: auto;
     margin-top: 50px;
     width: 50%;
-    background-color: #3f46ff;
+    background-color: #1a40fd;
 }
 
 .factBox h1 {
@@ -102,25 +165,30 @@ input::-webkit-inner-spin-button {
 }
 
 .factOptions button {
-    border-top: solid #f9ff4d 4px;
+    border-top: solid #ffffff 4px;
     border-bottom: none;
     padding: 10px;
-    background-color: #5c95fe;
+    background-color: #61d7ff;
     font-family: 'Courier New', Courier, monospace;
     cursor: pointer;
     font-weight: bold;
-    color: #3f2dff;
     font-size: 18px;
 }
 
+.factOptions button:hover {
+    background-color: #55c3ff;
+}
+
 .leftOption {
-    border-right: solid #f9ff4d 2px;
+    border-right: solid #ffffff 2px;
     border-left: none;
+    border-bottom-left-radius: 15px;
 }
 
 .rightOption {
-    border-left: solid #f9ff4d 2px;
+    border-left: solid #ffffff 2px;
     border-right: none;
+    border-bottom-right-radius: 15px;
 }
 
 /* styles for existing fact box*/

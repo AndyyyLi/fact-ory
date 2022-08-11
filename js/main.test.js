@@ -107,16 +107,25 @@ describe('factSpace', () => {
         expect(fetch).toHaveBeenCalledWith('/update?liked=true&id=12345', {"method": "POST"});
     });
 
-    test('updating with 404 response does not reset id and key', async () => {
+    test('updating with 404 response returns null and does not reset id and key', async () => {
         global.fetch = jest.fn(() => Promise.resolve({
             status: 404
-        }))
+        }));
+
+        factSpace.showExistingFact(TEST_FACT, true);
+        const res = await factSpace.update(true, true);
+
+        expect(res).toBe(null);
+        expect(factSpace.getId()).toEqual(12345);
+        expect(factSpace.getKey()).toEqual(0);
     });
 
     test('updating with no current id returns null', async () => {
-        const res = factSpace.update(true, true);
+        const res = await factSpace.update(true, true);
 
         expect(res).toBe(null);
+        expect(factSpace.getId()).toBe(null);
+        expect(factSpace.getKey()).toBe(null);
     });
 
     test('resets key after adding new fact', async () => {
@@ -145,5 +154,15 @@ describe('factSpace', () => {
         });
     });
 
+    test('adding fact with 400 response returns null and does not reset key', async () => {
+        global.fetch = jest.fn(() => Promise.resolve({
+            status: 400
+        }));
 
+        factSpace.showNewFact(1, true);
+        const res = await factSpace.addFact(true);
+
+        expect(res).toBe(null);
+        expect(factSpace.getKey()).toBe(1);
+    })
 });
