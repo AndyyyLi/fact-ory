@@ -21,10 +21,12 @@ input::-webkit-inner-spin-button {
 #pretitle {
     margin-top: 50px;
     font-size: 40px;
+    opacity: 0.0;
 }
 
 #title {
     font-size: 80px;
+    opacity: 0.0;
 }
 
 #topBar {
@@ -37,6 +39,10 @@ input::-webkit-inner-spin-button {
     bottom: 0;
     width: 100%;
     background-color: #adf1ff;
+}
+
+#inputBox {
+    opacity: 0.0;
 }
 
 #inputBox h2 {
@@ -194,6 +200,7 @@ input::-webkit-inner-spin-button {
 /* styles for existing fact box*/
 #existingFact {
     display: none;
+    opacity: 0.0;
 }
 
 #existingFact p {
@@ -218,6 +225,7 @@ input::-webkit-inner-spin-button {
 /* styles for new fact box*/
 #newFact {
     display: none;
+    opacity: 0.0;
 }
 
 #newFact textarea {

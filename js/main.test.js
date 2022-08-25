@@ -132,7 +132,7 @@ describe('factSpace', () => {
         global.fetch = jest.fn(() => Promise.resolve([]));
 
         factSpace.showNewFact(1, true);
-        await factSpace.addFact(true);
+        await factSpace.addFact(true, true);
 
         expect(factSpace.getKey()).toBe(null);
     });
@@ -141,7 +141,7 @@ describe('factSpace', () => {
         global.fetch = jest.fn(() => Promise.reject("API bad"));
 
         factSpace.showNewFact(1, true);
-        const res = await factSpace.addFact(true);
+        const res = await factSpace.addFact(true, true);
 
         expect(res).toBe(null);
         expect(factSpace.getKey()).toBe(null);
@@ -160,7 +160,7 @@ describe('factSpace', () => {
         }));
 
         factSpace.showNewFact(1, true);
-        const res = await factSpace.addFact(true);
+        const res = await factSpace.addFact(true, true);
 
         expect(res).toBe(null);
         expect(factSpace.getKey()).toBe(1);

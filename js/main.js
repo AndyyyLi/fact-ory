@@ -1,24 +1,58 @@
-var modal = document.getElementById("modalBox");
-
 // makes modal window appear on click
 function showModal() {
+    var modal = document.getElementById("modalBox");
     modal.style.display = "block";
 }
 
 // closes modal window upon pressing "Got it!"
 function closeModal() {
+    var modal = document.getElementById("modalBox");
     modal.style.display = "none";
 }
 
 // closes modal window upon clicking outside of box
 window.onclick = function(event) {
+    var modal = document.getElementById("modalBox");
     if (event.target == modal) {
         modal.style.display = "none";
     }
 }
 
+// linearly fades in given DOM elements using recursion
+function fadeIn(first, second, third) {
+    if (first == null) return;
+
+    let toFadeIn = document.getElementById(first);
+
+    var opacity = 0;
+
+    var intervalID = setInterval(function() {
+        if (opacity < 1) {
+            opacity += 0.1;
+            toFadeIn.style.opacity = opacity;
+        } else {
+            clearInterval(intervalID);
+            fadeIn(second, third, null);
+        }
+    }, 50);
+}
+
+// fades out given DOM element
+function fadeOut(element) {
+    let toFadeOut = document.getElementById(element);
+
+    var intervalID = setInterval(function() {
+        if (toFadeOut.style.opacity > 0) {
+            toFadeOut.style.opacity -= 0.1;
+        } else {
+            clearInterval(intervalID);
+        }
+    }, 50);
+}
+
 // allows user to search for fact by pressing enter instead of clicking button
 // DOM needs to load before keyInput can have an addEventListener
+// also calls fadeIn to trigger starting animation
 document.addEventListener('DOMContentLoaded', function() {
     var keyInput = document.getElementById("keyInput");
 
@@ -27,24 +61,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("searchBtn").click();
         }
     });
+
+    fadeIn("pretitle", "title", "inputBox");
 });
 
-// helper to remove input box from search screen
-function removeInputBox() {
-    let inputBox = document.getElementById("inputBox");
-
-    inputBox.style.display = "none";
-}
-
 // helper to change title display from search screen
-function shrinkTitle() {
+function shrinkTitle() {    
     let pretitle = document.getElementById("pretitle");
     let title = document.getElementById("title");
     let modalBox = document.getElementById("modalBox");
+    let inputBox = document.getElementById("inputBox");
+
+    inputBox.style.display = "none";
 
     pretitle.style.display = "none";
     title.style.fontSize = "40px";
     modalBox.style.marginTop = "-25px";
+
+    fadeIn("title");
 }
 
 // removes body elements of existingFact div
@@ -75,6 +109,7 @@ function newSearchScreen(justUpdated) {
     let inputBox = document.getElementById("inputBox");
     inputBox.style.display = "block";
     inputBox.style.marginTop = "175px";
+    fadeIn("inputBox");
 
     // clears input field
     document.getElementById("keyInput").value = "";
@@ -107,10 +142,17 @@ async function search(testing, testVal) {
             return searchVal;
         }
 
+        fadeOut("inputBox");
+        fadeOut("pretitle");
+        fadeOut("title");
+        setTimeout(shrinkTitle, 1000);
+
         if (fact) {
-            factSpace.showExistingFact(fact, false);
+            setTimeout(factSpace.showExistingFact, 1250, fact, false);
+            // factSpace.showExistingFact(fact, false);
         } else {
-            factSpace.showNewFact(searchVal, false);
+            // factSpace.showNewFact(searchVal, false);
+            setTimeout(factSpace.showNewFact, 1250, searchVal, false);
         }
     } catch (err) {
         console.log(err);
@@ -168,10 +210,8 @@ var factSpace = function() {
         likes.id = "likes";
         factDetails.appendChild(likes);
 
-        removeInputBox();
-        shrinkTitle();
-
         existingFact.style.display = "block";
+        fadeIn("existingFact");
     }
 
     // displays an input box that allows user to input their own fact which would create the fact in the db
@@ -199,10 +239,8 @@ var factSpace = function() {
         factInput.id = "factInput";
         newFact.insertBefore(factInput, factOptions);
 
-        removeInputBox();
-        shrinkTitle();
-
         newFact.style.display = "block";
+        fadeIn("newFact");
     }
 
     // updates current fact in server based on id and userLiked
@@ -229,7 +267,8 @@ var factSpace = function() {
             
             if (testing) return;
 
-            newSearchScreen(true);
+            fadeOut("existingFact")
+            setTimeout(newSearchScreen, 1000, true);
 
         } catch (err) {
             console.log(err);
@@ -242,42 +281,47 @@ var factSpace = function() {
     }
 
     // creates and inserts a new fact into db based on key
-    async function addFact(testing) {
+    async function addFact(toAdd, testing) {
         if (testing) {
             var factData = { fact: "test fact body" };
         } else {
-            var factInput = document.getElementById("factInput").value;
+            if (toAdd) {
+                var factInput = document.getElementById("factInput").value;
 
-            // check if input is blank
-            if (factInput.match(/^\s*$/)) {
-                alert("You must enter a fact to add it!");
-                return;
+                // check if input is blank
+                if (factInput.match(/^\s*$/)) {
+                    alert("You must enter a fact to add it!");
+                    return;
+                }
+    
+                var factData = { fact: factInput };
             }
-
-            var factData = { fact: factInput };
         }
         
         try {
-            var response = await fetch('/create?key=' + currentKey, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(factData)
-            });
-
-            if (response.status == 400) {
-                console.log("Something went wrong with accessing DB");
-                return null;
-            } else {
-                alert("Successfully added fact " + currentKey + ", thank you for your contribution!");
-
-                currentKey = null;
-
-                if (testing) return;
+            if (toAdd) {
+                var response = await fetch('/create?key=' + currentKey, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(factData)
+                });
+    
+                if (response.status == 400) {
+                    console.log("Something went wrong with accessing DB");
+                    return null;
+                } else {
+                    alert("Successfully added fact " + currentKey + ", thank you for your contribution!");
+    
+                    currentKey = null;
+    
+                    if (testing) return;
+                }
             }
 
-            newSearchScreen(false);
+            fadeOut("newFact");
+            setTimeout(newSearchScreen, 1000, false);
             
         } catch (err) {
             console.log(err);
