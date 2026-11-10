@@ -12,5 +12,5 @@ updates:
       interval: "weekly"
     groups:
       dev-dependencies:
-        dependency-type: all
+        dependency-type: development
     open-pull-requests-limit: 10
